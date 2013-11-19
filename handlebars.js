@@ -60,7 +60,26 @@ if (typeof Handlebars !== 'undefined') {
   Handlebars.registerHelper('cfsDownloadProgressBar', function(options) {
     var hash = options.hash;
     hash = hash || {};
-    return new Handlebars.SafeString(Template._cfsFileProgressBar({
+    return new Handlebars.SafeString(Template._cfsDownloadProgressBar({
+      fileObject: this,
+      attributes: objToAttributes(hash)
+    }));
+  });
+  
+  //Usage: {{cfsUploadProgress}} (with FileObject as current context or not for overall)
+  Handlebars.registerHelper('cfsUploadProgress', function() {
+    if (this instanceof FileObject) {
+      return CollectionFS.uploadQueue.progress(this);
+    } else {
+      return CollectionFS.uploadQueue.progress();
+    }
+  });
+
+  //Usage: {{cfsUploadProgressBar attribute=value}} (with FileObject as current context or not for overall)
+  Handlebars.registerHelper('cfsUploadProgressBar', function(options) {
+    var hash = options.hash;
+    hash = hash || {};
+    return new Handlebars.SafeString(Template._cfsUploadProgressBar({
       fileObject: this,
       attributes: objToAttributes(hash)
     }));

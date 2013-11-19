@@ -6,9 +6,15 @@
     <button type="button"{{{attributes}}}>{{content}}</button>
 </template>
 
-<template name="_cfsFileProgressBar">
+<template name="_cfsUploadProgressBar">
   {{#with fileObject}}
-  <progress value="{{cfsFileProgress}}" max="100"{{{../attributes}}}>{{cfsFileProgress}}%</progress>
+  <progress value="{{cfsUploadProgress}}" max="100"{{{../attributes}}}>{{cfsUploadProgress}}%</progress>
+  {{/with}}
+</template>
+
+<template name="_cfsDownloadProgressBar">
+  {{#with fileObject}}
+  <progress value="{{cfsDownloadProgress}}" max="100"{{{../attributes}}}>{{cfsDownloadProgress}}%</progress>
   {{/with}}
 </template>
 
