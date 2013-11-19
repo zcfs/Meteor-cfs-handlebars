@@ -24,8 +24,12 @@ be set to `true` for the corresponding CollectionFS instance.
 
 Use with a `FileObject` as the current context.
 
+Specify a `copy` attribute to get the URL for a specific copy. If you don't
+specify the copy name, the URL will be for the copy in the master store.
+
 ```
 {{cfsFileUrl}}
+{{cfsFileUrl copy="thumbnail"}}
 ```
 
 ### cfsIsImage
@@ -94,6 +98,9 @@ When used with a `FileObject` as the current context, shows the progress
 for that `FileObject`. When used outside of a `FileObject` context,
 shows total progress for all files that are being uploaded from this client.
 
+Any other attributes you specify on the helper (for example, "class") will be
+transferred to attributes on the resulting progress element.
+
 ```
 {{#if cfsIsUploading}}
 {{cfsUploadProgressBar}} Uploading...
@@ -109,8 +116,15 @@ the current FileObject is being downloaded from this client. When used
 outside of a `FileObject` context, returns true if **any** files are being
 downloaded from this client.
 
+When used with a `FileObject` as the current context, specify a `copy`
+attribute to check whether a specific copy is downloading. If you don't
+specify the copy name, the copy in the master store is used.
+
 ```
 {{#if cfsIsDownloading}}
+{{/if}}
+
+{{#if cfsIsDownloading copy="thumbnail"}}
 {{/if}}
 ```
 
@@ -122,9 +136,17 @@ When used with a `FileObject` as the current context, returns the progress
 for that `FileObject`. When used outside of a `FileObject` context,
 returns total progress for all files that are being downloaded from this client.
 
+When used with a `FileObject` as the current context, specify a `copy`
+attribute to get the download progress for a specific copy. If you don't
+specify the copy name, the copy in the master store is used.
+
 ```
 {{#if cfsIsDownloading}}
 Download Progress: {{cfsDownloadProgress}}%
+{{/if}}
+
+{{#if cfsIsDownloading copy="thumbnail"}}
+Download Progress: {{cfsDownloadProgress copy="thumbnail"}}%
 {{/if}}
 ```
 
@@ -136,9 +158,20 @@ When used with a `FileObject` as the current context, shows the progress
 for that `FileObject`. When used outside of a `FileObject` context,
 shows total progress for all files that are being downloaded from this client.
 
+When used with a `FileObject` as the current context, specify a `copy`
+attribute to show the download progress for a specific copy. If you don't
+specify the copy name, the copy in the master store is used.
+
+Any other attributes you specify on the helper (for example, "class") will be
+transferred to attributes on the resulting progress element.
+
 ```
 {{#if cfsIsDownloading}}
 {{cfsDownloadProgressBar}} Downloading...
+{{/if}}
+
+{{#if cfsIsDownloading copy="thumbnail"}}
+{{cfsDownloadProgressBar copy="thumbnail"}} Downloading...
 {{/if}}
 ```
 

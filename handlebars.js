@@ -37,9 +37,9 @@ if (typeof Handlebars !== 'undefined') {
   });
 
   //Usage: {{cfsIsDownloading}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsIsDownloading copy="copyName"}}
   Handlebars.registerHelper('cfsIsDownloading', function(opts) {
-    var hash;
-    hash = opts.hash || {};
+    var hash = opts.hash || {};
     if (this instanceof FileObject) {
       return CollectionFS.downloadQueue.isDownloadingFile(this, hash.copy);
     } else {
@@ -48,20 +48,22 @@ if (typeof Handlebars !== 'undefined') {
   });
 
   //Usage: {{cfsDownloadProgress}} (with FileObject as current context or not for overall)
-  Handlebars.registerHelper('cfsDownloadProgress', function() {
+  //Usage: {{cfsDownloadProgress copy="copyName"}}
+  Handlebars.registerHelper('cfsDownloadProgress', function(opts) {
+    var hash = opts.hash || {};
     if (this instanceof FileObject) {
-      return CollectionFS.downloadQueue.progress(this);
+      return CollectionFS.downloadQueue.progress(this, hash.copy);
     } else {
       return CollectionFS.downloadQueue.progress();
     }
   });
 
   //Usage: {{cfsDownloadProgressBar attribute=value}} (with FileObject as current context or not for overall)
-  Handlebars.registerHelper('cfsDownloadProgressBar', function(options) {
-    var hash = options.hash;
-    hash = hash || {};
+  Handlebars.registerHelper('cfsDownloadProgressBar', function(opts) {
+    var hash = opts.hash || {};
     return new Handlebars.SafeString(Template._cfsDownloadProgressBar({
       fileObject: this,
+      copyName: hash.copy,
       attributes: objToAttributes(hash)
     }));
   });
@@ -76,9 +78,8 @@ if (typeof Handlebars !== 'undefined') {
   });
 
   //Usage: {{cfsUploadProgressBar attribute=value}} (with FileObject as current context or not for overall)
-  Handlebars.registerHelper('cfsUploadProgressBar', function(options) {
-    var hash = options.hash;
-    hash = hash || {};
+  Handlebars.registerHelper('cfsUploadProgressBar', function(opts) {
+    var hash = opts.hash || {};
     return new Handlebars.SafeString(Template._cfsUploadProgressBar({
       fileObject: this,
       attributes: objToAttributes(hash)
@@ -88,10 +89,9 @@ if (typeof Handlebars !== 'undefined') {
   //Usage: {{cfsDeleteButton}} (with FileObject as current context)
   //Supported Options: content, any attribute
   Handlebars.registerHelper('cfsDeleteButton', function(opts) {
-    var hash, content;
-    hash = opts.hash || {};
+    var hash = opts.hash || {};
     hash["class"] = hash["class"] ? hash["class"] + ' cfsDeleteButton' : 'cfsDeleteButton';
-    content = hash.content || "Delete";
+    var content = hash.content || "Delete";
     if ("content" in hash)
       delete hash.content;
     return new Handlebars.SafeString(Template._cfsDeleteButton({
@@ -116,10 +116,9 @@ if (typeof Handlebars !== 'undefined') {
   //{{cfsDownloadButton}} (with FileObject as current context)
   //Supported Options: copy, content, any attribute
   Handlebars.registerHelper('cfsDownloadButton', function(opts) {
-    var hash, content;
-    hash = opts.hash || {};
+    var hash = opts.hash || {};
     hash["class"] = hash["class"] ? hash["class"] + ' cfsDownloadButton' : 'cfsDownloadButton';
-    content = hash.content || "Download";
+    var content = hash.content || "Download";
     if ("content" in hash)
       delete hash.content;
     var copyName = hash.copy || null;
