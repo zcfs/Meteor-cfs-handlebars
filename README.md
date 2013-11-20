@@ -9,6 +9,15 @@ A Meteor package that adds handlebars helpers for [CollectionFS](https://github.
 
 ## Installation
 
+NOTE: Until this is added to atmosphere, use this in smart.json:
+
+```js
+"cfs-handlebars": {
+  "git": "https://github.com/CollectionFS/Meteor-cfs-handlebars.git",
+  "branch": "master"
+}
+```
+
 Install using Meteorite. When in a Meteorite-managed app directory, enter:
 
 ```bash
