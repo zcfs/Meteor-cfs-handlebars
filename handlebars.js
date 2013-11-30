@@ -150,7 +150,7 @@ if (typeof Handlebars !== 'undefined') {
 
   Template._cfsFileInput.events({
     'change .cfsFileInput': function(event, template) {
-      var files = event.target.files, collectionFS = template.data.collectionFS;
+      var files = event.target.files, collectionFS = template.data.collectionFS, fileObj;
 
       if (!files)
         throw new Error("cfsFileInput Helper: no files");
@@ -159,7 +159,13 @@ if (typeof Handlebars !== 'undefined') {
         throw new Error("cfsFileInput Helper: no bound CollectionFS");
 
       for (var i = 0, ln = files.length; i < ln; i++) {
-        collectionFS.insert(files[i]);
+        fileObj = new FileObject(files[i]);
+        
+        if(this.owner){
+          fileObj.metadata = {owner: this.owner};
+        }
+
+        collectionFS.insert(fileObj);
       }
 
       event.target.parentElement.reset();
@@ -168,12 +174,18 @@ if (typeof Handlebars !== 'undefined') {
 
   //Usage: {{cfsFileInput collectionFS attribute=value}}
   Handlebars.registerHelper('cfsFileInput', function(collectionFS, options) {
-    var hash = options.hash;
+    var hash = options.hash, owner;
     hash = hash || {};
     hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
+    
+    owner = Meteor.userId() && hash["owner"] === "true" ? Meteor.userId() : false;
+    
+    delete hash["owner"];
+    
     return new Handlebars.SafeString(Template._cfsFileInput({
       collectionFS: collectionFS,
-      attributes: objToAttributes(hash)
+      attributes: objToAttributes(hash),
+      owner:owner
     }));
   });
 
