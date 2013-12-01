@@ -150,7 +150,8 @@ if (typeof Handlebars !== 'undefined') {
 
   Template._cfsFileInput.events({
     'change .cfsFileInput': function(event, template) {
-      var files = event.target.files, collectionFS = template.data.collectionFS;
+      var self = this;
+      var files = event.target.files, collectionFS = template.data.collectionFS, fileObj;
 
       if (!files)
         throw new Error("cfsFileInput Helper: no files");
@@ -158,22 +159,46 @@ if (typeof Handlebars !== 'undefined') {
       if (!collectionFS)
         throw new Error("cfsFileInput Helper: no bound CollectionFS");
 
-      for (var i = 0, ln = files.length; i < ln; i++) {
-        collectionFS.insert(files[i]);
-      }
+      _(files).each(function(file) {
+
+        fileObj = new FileObject(file);
+
+        if(!_.isEmpty(self.metadata)){
+          fileObj.metadata = {};
+          _(self.metadata).each(function(value, key) {
+            fileObj.metadata[key] = value;
+          });
+        }
+
+        collectionFS.insert(fileObj);
+
+      });
 
       event.target.parentElement.reset();
     }
   });
 
   //Usage: {{cfsFileInput collectionFS attribute=value}}
-  Handlebars.registerHelper('cfsFileInput', function(collectionFS, options) {
-    var hash = options.hash;
+  Handlebars.registerHelper('cfsFileInput', function(collectionFS, metadata, options) {
+    var hash;
+
+
+    if(metadata.hash){
+      options = metadata;
+      metadata = {};
+    }
+
+    hash = options.hash;
+
     hash = hash || {};
     hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
+
+    metadata = _(metadata).isObject() ? metadata : {};
+    
     return new Handlebars.SafeString(Template._cfsFileInput({
       collectionFS: collectionFS,
-      attributes: objToAttributes(hash)
+      attributes: objToAttributes(hash),
+      metadata:metadata
     }));
   });
 
