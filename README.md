@@ -236,6 +236,8 @@ soon as the user selects a file (or files).
 
 As the first positional argument, specify the CollectionFS instance to use.
 
+As a second (optional) positional argument, specify an object to be used as metadata. A helper on the template that returns an object is useful here. This is completely optional.
+
 Any other attributes you specify on the helper (for example, "class") will be
 transferred to attributes on the resulting `<input>` element.
 
@@ -244,6 +246,8 @@ transferred to attributes on the resulting `<input>` element.
 ```
 {{cfsFileInput myImageFiles}}
 {{cfsFileInput myImageFiles multiple="multiple"}}
+{{cfsFileInput myImageFiles metadata}}
+{{cfsFileInput myImageFiles metadata multiple="multiple"}}
 ```
 
 **client.js:**
@@ -252,5 +256,9 @@ transferred to attributes on the resulting `<input>` element.
 var Images = new CollectionFS(/* ... */);
 Template.images.myImageFiles = function() {
   return Images;
+};
+
+Template.images.metadata = {
+	userId:Meteor.userId()
 };
 ```

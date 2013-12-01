@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 if (typeof Handlebars !== 'undefined') {
   //Usage (default format string):
   //{{cfsFormattedSize}} (with FileObject as current context)
@@ -150,6 +150,7 @@ if (typeof Handlebars !== 'undefined') {
 
   Template._cfsFileInput.events({
     'change .cfsFileInput': function(event, template) {
+      var self = this;
       var files = event.target.files, collectionFS = template.data.collectionFS, fileObj;
 
       if (!files)
@@ -158,34 +159,43 @@ if (typeof Handlebars !== 'undefined') {
       if (!collectionFS)
         throw new Error("cfsFileInput Helper: no bound CollectionFS");
 
-      for (var i = 0, ln = files.length; i < ln; i++) {
-        fileObj = new FileObject(files[i]);
-        
-        if(this.owner){
-          fileObj.metadata = {owner: this.owner};
-        }
+      _(files).each(function(file) {
+
+        fileObj = new FileObject(file);
+        fileObj.metadata = {};
+        _(self.metadata).each(function(value, key) {
+          fileObj.metadata[key] = value;
+        });
 
         collectionFS.insert(fileObj);
-      }
+
+      });
 
       event.target.parentElement.reset();
     }
   });
 
   //Usage: {{cfsFileInput collectionFS attribute=value}}
-  Handlebars.registerHelper('cfsFileInput', function(collectionFS, options) {
-    var hash = options.hash, owner;
+  Handlebars.registerHelper('cfsFileInput', function(collectionFS, metadata, options) {
+    var hash;
+
+
+    if(metadata.hash){
+      options = metadata;
+      metadata = {};
+    }
+
+    hash = options.hash;
+
     hash = hash || {};
     hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
-    
-    owner = Meteor.userId() && hash["owner"] === "true" ? Meteor.userId() : false;
-    
-    delete hash["owner"];
+
+    metadata = _(metadata).isObject() ? metadata : {};
     
     return new Handlebars.SafeString(Template._cfsFileInput({
       collectionFS: collectionFS,
       attributes: objToAttributes(hash),
-      owner:owner
+      metadata:metadata
     }));
   });
 
