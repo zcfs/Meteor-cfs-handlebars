@@ -15,10 +15,16 @@ if (typeof Handlebars !== 'undefined') {
 
   //Usage: {{cfsFileUrl}} (with FileObject as current context)
   Handlebars.registerHelper('cfsFileUrl', function(copyName) {
+    var self = this;
+    
+    if (!(self instanceof FileObject)) {
+      throw new Error("cfsFileUrl helper must be used with a FileObject context");
+    }
+    
     if (typeof copyName === "string") {
-      return this.url(copyName);
+      return self.url(copyName);
     } else {
-      return this.url();
+      return self.url();
     }
   });
 
