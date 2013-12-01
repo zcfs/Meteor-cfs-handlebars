@@ -162,10 +162,13 @@ if (typeof Handlebars !== 'undefined') {
       _(files).each(function(file) {
 
         fileObj = new FileObject(file);
-        fileObj.metadata = {};
-        _(self.metadata).each(function(value, key) {
-          fileObj.metadata[key] = value;
-        });
+
+        if(!_.isEmpty(self.metadata)){
+          fileObj.metadata = {};
+          _(self.metadata).each(function(value, key) {
+            fileObj.metadata[key] = value;
+          });
+        }
 
         collectionFS.insert(fileObj);
 
