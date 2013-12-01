@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 if (typeof Handlebars !== 'undefined') {
   //Usage (default format string):
   //{{cfsFormattedSize}} (with FileObject as current context)
