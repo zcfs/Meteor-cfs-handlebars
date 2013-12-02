@@ -24,14 +24,14 @@ Install using Meteorite. When in a Meteorite-managed app directory, enter:
 $ mrt add cfs-handlebars
 ```
 
-## General FileObject Helpers
+## General FS.File Helpers
 
 ### cfsFileUrl
 
-Returns the HTTP file URL for the current FileObject. Requires that the `useHTTP` option
-be set to `true` for the corresponding CollectionFS instance.
+Returns the HTTP file URL for the current FS.File. Requires that the `useHTTP` option
+be set to `true` for the corresponding FS.Collection instance.
 
-Use with a `FileObject` as the current context.
+Use with a `FS.File` as the current context.
 
 Specify a `copy` attribute to get the URL for a specific copy. If you don't
 specify the copy name, the URL will be for the copy in the master store.
@@ -43,10 +43,10 @@ specify the copy name, the URL will be for the copy in the master store.
 
 ### cfsIsImage
 
-Returns true if the current FileObject has a content type that begins with
+Returns true if the current FS.File has a content type that begins with
 `image/`.
 
-Use with a `FileObject` as the current context.
+Use with a `FS.File` as the current context.
 
 ```
 {{#if cfsIsImage}}
@@ -55,11 +55,11 @@ Use with a `FileObject` as the current context.
 
 ### cfsFormattedSize
 
-Formats the file size of the current FileObject using any format string supported by
+Formats the file size of the current FS.File using any format string supported by
 numeral.js. If you don't specify formatString, a default format string
 `0.00 b` is used.
 
-Use with a `FileObject` as the current context.
+Use with a `FS.File` as the current context.
 
 ```
 {{cfsFormattedSize}}
@@ -75,9 +75,9 @@ Use with a `FileObject` as the current context.
 
 ### cfsIsUploading
 
-When used with a `FileObject` as the current context, returns true if
-the current FileObject is being uploaded from this client. When used
-outside of a `FileObject` context, returns true if **any** files are being
+When used with a `FS.File` as the current context, returns true if
+the current FS.File is being uploaded from this client. When used
+outside of a `FS.File` context, returns true if **any** files are being
 uploaded from this client.
 
 ```
@@ -89,8 +89,8 @@ uploaded from this client.
 
 Returns an integer indicating the percentage progress of the upload.
 
-When used with a `FileObject` as the current context, returns the progress
-for that `FileObject`. When used outside of a `FileObject` context,
+When used with a `FS.File` as the current context, returns the progress
+for that `FS.File`. When used outside of a `FS.File` context,
 returns total progress for all files that are being uploaded from this client.
 
 ```
@@ -103,8 +103,8 @@ Upload Progress: {{cfsUploadProgress}}%
 
 Outputs an HTML5 `<progress>` element that shows the progress of the upload.
 
-When used with a `FileObject` as the current context, shows the progress
-for that `FileObject`. When used outside of a `FileObject` context,
+When used with a `FS.File` as the current context, shows the progress
+for that `FS.File`. When used outside of a `FS.File` context,
 shows total progress for all files that are being uploaded from this client.
 
 Any other attributes you specify on the helper (for example, "class") will be
@@ -120,12 +120,12 @@ transferred to attributes on the resulting progress element.
 
 ### cfsIsDownloading
 
-When used with a `FileObject` as the current context, returns true if
-the current FileObject is being downloaded from this client. When used
-outside of a `FileObject` context, returns true if **any** files are being
+When used with a `FS.File` as the current context, returns true if
+the current FS.File is being downloaded from this client. When used
+outside of a `FS.File` context, returns true if **any** files are being
 downloaded from this client.
 
-When used with a `FileObject` as the current context, specify a `copy`
+When used with a `FS.File` as the current context, specify a `copy`
 attribute to check whether a specific copy is downloading. If you don't
 specify the copy name, the copy in the master store is used.
 
@@ -141,11 +141,11 @@ specify the copy name, the copy in the master store is used.
 
 Returns an integer indicating the percentage progress of the download.
 
-When used with a `FileObject` as the current context, returns the progress
-for that `FileObject`. When used outside of a `FileObject` context,
+When used with a `FS.File` as the current context, returns the progress
+for that `FS.File`. When used outside of a `FS.File` context,
 returns total progress for all files that are being downloaded from this client.
 
-When used with a `FileObject` as the current context, specify a `copy`
+When used with a `FS.File` as the current context, specify a `copy`
 attribute to get the download progress for a specific copy. If you don't
 specify the copy name, the copy in the master store is used.
 
@@ -163,11 +163,11 @@ Download Progress: {{cfsDownloadProgress copy="thumbnail"}}%
 
 Outputs an HTML5 `<progress>` element that shows the progress of the download.
 
-When used with a `FileObject` as the current context, shows the progress
-for that `FileObject`. When used outside of a `FileObject` context,
+When used with a `FS.File` as the current context, shows the progress
+for that `FS.File`. When used outside of a `FS.File` context,
 shows total progress for all files that are being downloaded from this client.
 
-When used with a `FileObject` as the current context, specify a `copy`
+When used with a `FS.File` as the current context, specify a `copy`
 attribute to show the download progress for a specific copy. If you don't
 specify the copy name, the copy in the master store is used.
 
@@ -188,8 +188,8 @@ transferred to attributes on the resulting progress element.
 
 ### cfsDeleteButton
 
-Creates an HTML `<button>` element for the current `FileObject` which, when clicked,
-deletes the file from its CollectionFS, thereby deleting its data and the data
+Creates an HTML `<button>` element for the current `FS.File` which, when clicked,
+deletes the file from its FS.Collection, thereby deleting its data and the data
 for any copies from their respective stores.
 
 Specify a `content` attribute to set the button element content. If you don't
@@ -206,7 +206,7 @@ transferred to attributes on the resulting `<button>` element.
 
 ### cfsDownloadButton
 
-Creates an HTML `<button>` element for the current `FileObject` which, when clicked,
+Creates an HTML `<button>` element for the current `FS.File` which, when clicked,
 initiates downloading of the file by the browser. This uses a FileSaver
 shim which should support most modern browsers.
 
@@ -231,10 +231,10 @@ Examples:
 
 ### cfsFileInput
 
-Creates an HTML file input element that uploads to the given CollectionFS as
+Creates an HTML file input element that uploads to the given FS.Collection as
 soon as the user selects a file (or files).
 
-As the first positional argument, specify the CollectionFS instance to use.
+As the first positional argument, specify the FS.Collection instance to use.
 
 As a second (optional) positional argument, specify an object to be used as metadata. A helper on the template that returns an object is useful here. This is completely optional.
 
@@ -253,7 +253,7 @@ transferred to attributes on the resulting `<input>` element.
 **client.js:**
 
 ```js
-var Images = new CollectionFS(/* ... */);
+var Images = new FS.Collection(/* ... */);
 Template.images.myImageFiles = function() {
   return Images;
 };

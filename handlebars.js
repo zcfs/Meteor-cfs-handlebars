@@ -1,9 +1,9 @@
 "use strict";
 if (typeof Handlebars !== 'undefined') {
   //Usage (default format string):
-  //{{cfsFormattedSize}} (with FileObject as current context)
+  //{{cfsFormattedSize}} (with FS.File as current context)
   //Usage (any format string supported by numeral.format):
-  //{{cfsFormattedSize formatString=formatString}} (with FileObject as current context)
+  //{{cfsFormattedSize formatString=formatString}} (with FS.File as current context)
   Handlebars.registerHelper('cfsFormattedSize', function(opts) {
     var self = this;
     var size = self.size || 0;
@@ -13,12 +13,12 @@ if (typeof Handlebars !== 'undefined') {
     return numeral(size).format(formatString);
   });
 
-  //Usage: {{cfsFileUrl}} (with FileObject as current context)
+  //Usage: {{cfsFileUrl}} (with FS.File as current context)
   Handlebars.registerHelper('cfsFileUrl', function(copyName) {
     var self = this;
     
-    if (!(self instanceof FileObject)) {
-      throw new Error("cfsFileUrl helper must be used with a FileObject context");
+    if (!(self instanceof FS.File)) {
+      throw new Error("cfsFileUrl helper must be used with a FS.File context");
     }
     
     if (typeof copyName === "string") {
@@ -28,71 +28,71 @@ if (typeof Handlebars !== 'undefined') {
     }
   });
 
-  //Usage: {{cfsIsImage}} (with FileObject as current context)
+  //Usage: {{cfsIsImage}} (with FS.File as current context)
   Handlebars.registerHelper('cfsIsImage', function() {
     return this.isImage();
   });
 
-  //Usage: {{cfsIsUploading}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsIsUploading}} (with FS.File as current context or not for overall)
   Handlebars.registerHelper('cfsIsUploading', function() {
-    if (this instanceof FileObject) {
-      return CollectionFS.uploadQueue.isUploadingFile(this);
+    if (this instanceof FS.File) {
+      return FS.uploadQueue.isUploadingFile(this);
     } else {
-      return CollectionFS.uploadQueue.isRunning();
+      return FS.uploadQueue.isRunning();
     }
   });
 
-  //Usage: {{cfsIsDownloading}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsIsDownloading}} (with FS.File as current context or not for overall)
   //Usage: {{cfsIsDownloading copy="copyName"}}
   Handlebars.registerHelper('cfsIsDownloading', function(opts) {
     var hash = opts.hash || {};
-    if (this instanceof FileObject) {
-      return CollectionFS.downloadQueue.isDownloadingFile(this, hash.copy);
+    if (this instanceof FS.File) {
+      return FS.downloadQueue.isDownloadingFile(this, hash.copy);
     } else {
-      return CollectionFS.downloadQueue.isRunning();
+      return FS.downloadQueue.isRunning();
     }
   });
 
-  //Usage: {{cfsDownloadProgress}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsDownloadProgress}} (with FS.File as current context or not for overall)
   //Usage: {{cfsDownloadProgress copy="copyName"}}
   Handlebars.registerHelper('cfsDownloadProgress', function(opts) {
     var hash = opts.hash || {};
-    if (this instanceof FileObject) {
-      return CollectionFS.downloadQueue.progress(this, hash.copy);
+    if (this instanceof FS.File) {
+      return FS.downloadQueue.progress(this, hash.copy);
     } else {
-      return CollectionFS.downloadQueue.progress();
+      return FS.downloadQueue.progress();
     }
   });
 
-  //Usage: {{cfsDownloadProgressBar attribute=value}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsDownloadProgressBar attribute=value}} (with FS.File as current context or not for overall)
   Handlebars.registerHelper('cfsDownloadProgressBar', function(opts) {
     var hash = opts.hash || {};
     return new Handlebars.SafeString(Template._cfsDownloadProgressBar({
-      fileObject: this,
+      fsFile: this,
       copyName: hash.copy,
       attributes: objToAttributes(hash)
     }));
   });
   
-  //Usage: {{cfsUploadProgress}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsUploadProgress}} (with FS.File as current context or not for overall)
   Handlebars.registerHelper('cfsUploadProgress', function() {
-    if (this instanceof FileObject) {
-      return CollectionFS.uploadQueue.progress(this);
+    if (this instanceof FS.File) {
+      return FS.uploadQueue.progress(this);
     } else {
-      return CollectionFS.uploadQueue.progress();
+      return FS.uploadQueue.progress();
     }
   });
 
-  //Usage: {{cfsUploadProgressBar attribute=value}} (with FileObject as current context or not for overall)
+  //Usage: {{cfsUploadProgressBar attribute=value}} (with FS.File as current context or not for overall)
   Handlebars.registerHelper('cfsUploadProgressBar', function(opts) {
     var hash = opts.hash || {};
     return new Handlebars.SafeString(Template._cfsUploadProgressBar({
-      fileObject: this,
+      fsFile: this,
       attributes: objToAttributes(hash)
     }));
   });
 
-  //Usage: {{cfsDeleteButton}} (with FileObject as current context)
+  //Usage: {{cfsDeleteButton}} (with FS.File as current context)
   //Supported Options: content, any attribute
   Handlebars.registerHelper('cfsDeleteButton', function(opts) {
     var hash = opts.hash || {};
@@ -101,7 +101,7 @@ if (typeof Handlebars !== 'undefined') {
     if ("content" in hash)
       delete hash.content;
     return new Handlebars.SafeString(Template._cfsDeleteButton({
-      fileObject: this,
+      fsFile: this,
       content: content,
       attributes: objToAttributes(hash)
     }));
@@ -109,17 +109,17 @@ if (typeof Handlebars !== 'undefined') {
 
   Template._cfsDeleteButton.events({
     'click .cfsDeleteButton': function(event, template) {
-      var fileObject = template.data.fileObject;
-      if (!fileObject) {
+      var fsFile = template.data.fsFile;
+      if (!fsFile) {
         return false;
       }
-      fileObject.remove();
+      fsFile.remove();
       return false;
     }
   });
 
   ////Usage:
-  //{{cfsDownloadButton}} (with FileObject as current context)
+  //{{cfsDownloadButton}} (with FS.File as current context)
   //Supported Options: copy, content, any attribute
   Handlebars.registerHelper('cfsDownloadButton', function(opts) {
     var hash = opts.hash || {};
@@ -131,7 +131,7 @@ if (typeof Handlebars !== 'undefined') {
     if ("copy" in hash)
       delete hash.copy;
     return new Handlebars.SafeString(Template._cfsDownloadButton({
-      fileObject: this,
+      fsFile: this,
       copyName: copyName,
       content: content,
       attributes: objToAttributes(hash)
@@ -140,15 +140,15 @@ if (typeof Handlebars !== 'undefined') {
 
   Template._cfsDownloadButton.events({
     'click .cfsDownloadButton': function(event, template) {
-      var fileObject = template.data.fileObject;
+      var fsFile = template.data.fsFile;
       var copyName = template.data.copyName;
-      if (!fileObject) {
+      if (!fsFile) {
         return false;
       }
 
       // Kick off download of current copy, and when it's done, tell the browser
       // to save the file in the downloads folder.
-      fileObject.get(copyName);
+      fsFile.get(copyName);
 
       return false;
     }
@@ -157,17 +157,17 @@ if (typeof Handlebars !== 'undefined') {
   Template._cfsFileInput.events({
     'change .cfsFileInput': function(event, template) {
       var self = this;
-      var files = event.target.files, collectionFS = template.data.collectionFS, fileObj;
+      var files = event.target.files, fsCollection = template.data.fsCollection, fileObj;
 
       if (!files)
         throw new Error("cfsFileInput Helper: no files");
 
-      if (!collectionFS)
-        throw new Error("cfsFileInput Helper: no bound CollectionFS");
+      if (!fsCollection)
+        throw new Error("cfsFileInput Helper: no bound FS.Collection");
 
       _(files).each(function(file) {
 
-        fileObj = new FileObject(file);
+        fileObj = new FS.File(file);
 
         if(!_.isEmpty(self.metadata)){
           fileObj.metadata = {};
@@ -176,7 +176,7 @@ if (typeof Handlebars !== 'undefined') {
           });
         }
 
-        collectionFS.insert(fileObj);
+        fsCollection.insert(fileObj);
 
       });
 
@@ -184,8 +184,8 @@ if (typeof Handlebars !== 'undefined') {
     }
   });
 
-  //Usage: {{cfsFileInput collectionFS attribute=value}}
-  Handlebars.registerHelper('cfsFileInput', function(collectionFS, metadata, options) {
+  //Usage: {{cfsFileInput fsCollection attribute=value}}
+  Handlebars.registerHelper('cfsFileInput', function(fsCollection, metadata, options) {
     var hash;
 
 
@@ -202,7 +202,7 @@ if (typeof Handlebars !== 'undefined') {
     metadata = _(metadata).isObject() ? metadata : {};
     
     return new Handlebars.SafeString(Template._cfsFileInput({
-      collectionFS: collectionFS,
+      fsCollection: fsCollection,
       attributes: objToAttributes(hash),
       metadata:metadata
     }));
