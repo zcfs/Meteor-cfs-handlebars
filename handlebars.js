@@ -162,7 +162,7 @@ if (typeof Handlebars !== 'undefined') {
   Template._cfsFileInput.events({
     'change .cfsFileInput': function(event, template) {
       var self = this;
-      var files = event.target.files, fsCollection = template.data.fsCollection, fileObj;
+      var files = event.target.files, fsCollection = template.data.fsCollection;
 
       if (!files)
         throw new Error("cfsFileInput Helper: no files");
@@ -171,18 +171,20 @@ if (typeof Handlebars !== 'undefined') {
         throw new Error("cfsFileInput Helper: no bound FS.Collection");
 
       _(files).each(function(file) {
+        FS.File.fromFile(file, function(err, fsFile) {
+          if (err) {
+            throw err;
+          } else {
+            if (!_.isEmpty(self.metadata)) {
+              fsFile.metadata = {};
+              _(self.metadata).each(function(value, key) {
+                fsFile.metadata[key] = value;
+              });
+            }
 
-        fileObj = new FS.File(file);
-
-        if (!_.isEmpty(self.metadata)) {
-          fileObj.metadata = {};
-          _(self.metadata).each(function(value, key) {
-            fileObj.metadata[key] = value;
-          });
-        }
-
-        fsCollection.insert(fileObj);
-
+            fsCollection.insert(fsFile);
+          }
+        });
       });
 
       event.target.parentElement.reset();
