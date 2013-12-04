@@ -16,11 +16,11 @@ if (typeof Handlebars !== 'undefined') {
   //Usage: {{cfsFileUrl}} (with FS.File as current context)
   Handlebars.registerHelper('cfsFileUrl', function(copyName) {
     var self = this;
-    
+
     if (!(self instanceof FS.File)) {
       throw new Error("cfsFileUrl helper must be used with a FS.File context");
     }
-    
+
     if (typeof copyName === "string") {
       return self.url(copyName);
     } else {
@@ -73,7 +73,7 @@ if (typeof Handlebars !== 'undefined') {
       attributes: objToAttributes(hash)
     }));
   });
-  
+
   //Usage: {{cfsUploadProgress}} (with FS.File as current context or not for overall)
   Handlebars.registerHelper('cfsUploadProgress', function() {
     if (this instanceof FS.File) {
@@ -117,6 +117,11 @@ if (typeof Handlebars !== 'undefined') {
       return false;
     }
   });
+
+  Template._cfsDownloadProgressBar.preserve(['progress']);
+  Template._cfsUploadProgressBar.preserve(['progress']);
+  Template._cfsDeleteButton.preserve(['button']);
+  Template._cfsDownloadButton.preserve(['button']);
 
   ////Usage:
   //{{cfsDownloadButton}} (with FS.File as current context)
@@ -169,7 +174,7 @@ if (typeof Handlebars !== 'undefined') {
 
         fileObj = new FS.File(file);
 
-        if(!_.isEmpty(self.metadata)){
+        if (!_.isEmpty(self.metadata)) {
           fileObj.metadata = {};
           _(self.metadata).each(function(value, key) {
             fileObj.metadata[key] = value;
@@ -189,7 +194,7 @@ if (typeof Handlebars !== 'undefined') {
     var hash;
 
 
-    if(metadata.hash){
+    if (metadata.hash) {
       options = metadata;
       metadata = {};
     }
@@ -200,11 +205,11 @@ if (typeof Handlebars !== 'undefined') {
     hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
 
     metadata = _(metadata).isObject() ? metadata : {};
-    
+
     return new Handlebars.SafeString(Template._cfsFileInput({
       fsCollection: fsCollection,
       attributes: objToAttributes(hash),
-      metadata:metadata
+      metadata: metadata
     }));
   });
 
