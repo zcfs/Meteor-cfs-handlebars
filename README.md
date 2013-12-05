@@ -61,8 +61,17 @@ numeral.js. If you don't specify formatString, a default format string
 
 Use with a `FS.File` as the current context.
 
+You can specify a copy name as the first positional argument. If you don't, the
+size of the master copy is used.
+
 ```
 {{cfsFormattedSize}}
+```
+
+--OR--
+
+```
+{{cfsFormattedSize "thumbnail"}}
 ```
 
 --OR--
