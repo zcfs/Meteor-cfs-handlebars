@@ -52,6 +52,16 @@ if (typeof Handlebars !== 'undefined') {
       return FS.downloadQueue.isRunning();
     }
   });
+  
+  //Usage: {{cfsUploadsArePaused}}
+  Handlebars.registerHelper('cfsUploadsArePaused', function() {
+    return FS.uploadQueue.isPaused();
+  });
+  
+  //Usage: {{cfsDownloadsArePaused}}
+  Handlebars.registerHelper('cfsDownloadsArePaused', function() {
+    return FS.downloadQueue.isPaused();
+  });
 
   //Usage: {{cfsDownloadProgress}} (with FS.File as current context or not for overall)
   //Usage: {{cfsDownloadProgress copy="copyName"}}

@@ -116,6 +116,18 @@ transferred to attributes on the resulting progress element.
 {{/if}}
 ```
 
+### cfsUploadsArePaused
+
+True if the upload queue is paused.
+
+```
+{{#if cfsUploadsArePaused}}
+<div><button type="button" class="resumeUploads">Resume All Uploads</button></div>
+{{else}}
+<div><button type="button" class="pauseUploads">Pause All Uploads</button></div>
+{{/if}}
+```
+
 ## Download Helpers
 
 ### cfsIsDownloading
@@ -181,6 +193,18 @@ transferred to attributes on the resulting progress element.
 
 {{#if cfsIsDownloading copy="thumbnail"}}
 {{cfsDownloadProgressBar copy="thumbnail"}} Downloading...
+{{/if}}
+```
+
+### cfsDownloadsArePaused
+
+True if the upload queue is paused.
+
+```
+{{#if cfsDownloadsArePaused}}
+<div><button type="button" class="resumeDownloads">Resume All Downloads</button></div>
+{{else}}
+<div><button type="button" class="pauseDownloads">Pause All Downloads</button></div>
 {{/if}}
 ```
 
