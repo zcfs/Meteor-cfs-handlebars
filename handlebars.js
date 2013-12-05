@@ -1,13 +1,32 @@
 "use strict";
 if (typeof Handlebars !== 'undefined') {
-  //Usage (default format string):
+  //Usage (default format string, master copy):
   //{{cfsFormattedSize}} (with FS.File as current context)
+  //Usage (default format string, another copy):
+  //{{cfsFormattedSize "copyName"}} (with FS.File as current context)
   //Usage (any format string supported by numeral.format):
   //{{cfsFormattedSize formatString=formatString}} (with FS.File as current context)
-  Handlebars.registerHelper('cfsFormattedSize', function(opts) {
+  Handlebars.registerHelper('cfsFormattedSize', function(copyName, opts) {
     var self = this;
-    var size = self.size || 0;
-    var hash, formatString;
+    
+    if (!opts) {
+      opts = copyName;
+      copyName = null;
+    }
+    
+    if (!(self instanceof FS.File)) {
+      throw new Error("cfsFileUrl helper must be used with a FS.File context");
+    }
+    
+    var hash, formatString, size, copy;
+    
+    if (typeof copyName === "string") {
+      copy = (self.copies || {})[copyName] || {};
+    } else {
+      copy = self.master || {};
+    }
+    
+    size = copy.size || 0;
     hash = opts.hash || {};
     formatString = hash.formatString || '0.00 b';
     return numeral(size).format(formatString);

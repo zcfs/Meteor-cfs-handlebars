@@ -7,6 +7,7 @@ Package.on_use(function(api) {
   api.use(['underscore', 'templating', 'handlebars', 'collectionFS'], 'client');
   api.add_files([
     'templates.html',
+    'numeral.js',
     'handlebars.js'
   ], 'client');
 });
