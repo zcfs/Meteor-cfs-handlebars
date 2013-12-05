@@ -8,24 +8,24 @@ if (typeof Handlebars !== 'undefined') {
   //{{cfsFormattedSize formatString=formatString}} (with FS.File as current context)
   Handlebars.registerHelper('cfsFormattedSize', function(copyName, opts) {
     var self = this;
-    
+
     if (!opts) {
       opts = copyName;
       copyName = null;
     }
-    
+
     if (!(self instanceof FS.File)) {
       throw new Error("cfsFileUrl helper must be used with a FS.File context");
     }
-    
+
     var hash, formatString, size, copy;
-    
+
     if (typeof copyName === "string") {
       copy = (self.copies || {})[copyName] || {};
     } else {
       copy = self.master || {};
     }
-    
+
     size = copy.size || 0;
     hash = opts.hash || {};
     formatString = hash.formatString || '0.00 b';
@@ -71,12 +71,12 @@ if (typeof Handlebars !== 'undefined') {
       return FS.downloadQueue.isRunning();
     }
   });
-  
+
   //Usage: {{cfsUploadsArePaused}}
   Handlebars.registerHelper('cfsUploadsArePaused', function() {
     return FS.uploadQueue.isPaused();
   });
-  
+
   //Usage: {{cfsDownloadsArePaused}}
   Handlebars.registerHelper('cfsDownloadsArePaused', function() {
     return FS.downloadQueue.isPaused();
@@ -200,19 +200,15 @@ if (typeof Handlebars !== 'undefined') {
         throw new Error("cfsFileInput Helper: no bound FS.Collection");
 
       _(files).each(function(file) {
-        FS.File.fromFile(file, function(err, fsFile) {
-          if (err) {
-            throw err;
-          } else {
-            if (!_.isEmpty(self.metadata)) {
-              fsFile.metadata = {};
-              _(self.metadata).each(function(value, key) {
-                fsFile.metadata[key] = value;
-              });
-            }
-
-            fsCollection.insert(fsFile);
-          }
+        var fsFile = new FS.File(file);
+        if (!_.isEmpty(self.metadata)) {
+          fsFile.metadata = {};
+          _(self.metadata).each(function(value, key) {
+            fsFile.metadata[key] = value;
+          });
+        }
+        fsCollection.insert(fsFile, function (err) {
+          if (err) throw err;
         });
       });
 
