@@ -20,12 +20,11 @@ if (typeof Handlebars !== 'undefined') {
 
     var hash, formatString, size, copy;
 
-    if (typeof copyName === "string") {
-      copy = (self.copies || {})[copyName] || {};
-    } else {
-      copy = self.master || {};
+    if (typeof copyName !== "string") {
+      copyName = "_master";
     }
-
+    
+    var copy = (self.copies || {})[copyName] || {};
     size = copy.size || 0;
     hash = opts.hash || {};
     formatString = hash.formatString || '0.00 b';
@@ -40,11 +39,7 @@ if (typeof Handlebars !== 'undefined') {
       throw new Error("cfsFileUrl helper must be used with a FS.File context");
     }
 
-    if (typeof copyName === "string") {
-      return self.url(copyName);
-    } else {
-      return self.url();
-    }
+    return self.url(copyName);
   });
 
   //Usage: {{cfsIsImage}} (with FS.File as current context)
@@ -161,7 +156,7 @@ if (typeof Handlebars !== 'undefined') {
     var content = hash.content || "Download";
     if ("content" in hash)
       delete hash.content;
-    var copyName = hash.copy || null;
+    var copyName = hash.copy || "_master";
     if ("copy" in hash)
       delete hash.copy;
     return new Handlebars.SafeString(Template._cfsDownloadButton({
