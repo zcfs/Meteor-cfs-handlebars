@@ -215,6 +215,9 @@ if (typeof Handlebars !== 'undefined') {
   Handlebars.registerHelper('cfsFileInput', function(fsCollection, metadata, options) {
     var hash;
 
+    if(!fsCollection instanceof FS.Collection){
+      throw new Error("cfsFileInput helper requires an instance of FS.Collection as its first parameter");
+    }
 
     if (metadata.hash) {
       options = metadata;
