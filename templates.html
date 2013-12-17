@@ -1,23 +1,23 @@
 <template name="_cfsDownloadButton">
-    <button type="button"{{{attributes}}}>{{content}}</button>
+    <button type="button" {{{attributes}}}>{{content}}</button>
 </template>
 
 <template name="_cfsDeleteButton">
-    <button type="button"{{{attributes}}}>{{content}}</button>
+    <button type="button" {{{attributes}}}>{{content}}</button>
 </template>
 
 <template name="_cfsUploadProgressBar">
   {{#with fsFile}}
-  <progress value="{{cfsUploadProgress}}" max="100"{{{../attributes}}}>{{cfsUploadProgress}}%</progress>
+  <progress value="{{cfsUploadProgress}}" max="100" {{{../attributes}}}>{{cfsUploadProgress}}%</progress>
   {{/with}}
 </template>
 
 <template name="_cfsDownloadProgressBar">
   {{#with fsFile}}
-  <progress value="{{cfsDownloadProgress copy=copyName}}" max="100"{{{../attributes}}}>{{cfsDownloadProgress copy=copyName}}%</progress>
+  <progress value="{{cfsDownloadProgress copy=copyName}}" max="100" {{{../attributes}}}>{{cfsDownloadProgress copy=copyName}}%</progress>
   {{/with}}
 </template>
 
 <template name="_cfsFileInput">
-  <form><input type="file"{{{attributes}}} /></form>
+  <form><input type="file" {{{attributes}}} /></form>
 </template>
