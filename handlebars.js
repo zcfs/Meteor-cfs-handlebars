@@ -247,8 +247,12 @@ var objToAttributes = function(obj) {
     return "";
   }
   var a = "";
+  var space = null;
   _.each(obj, function(value, key) {
-    a += ' ' + key + '="' + value + '"';
+    a += space + key + '="' + value + '"';
+    if(! space){
+      space = " ";
+    }
   });
   return a;
 };
