@@ -247,10 +247,10 @@ var objToAttributes = function(obj) {
     return "";
   }
   var a = "";
-  var space = null;
+  var space = "";
   _.each(obj, function(value, key) {
     a += space + key + '="' + value + '"';
-    if(! space){
+    if(! space.length){
       space = " ";
     }
   });
