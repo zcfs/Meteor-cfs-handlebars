@@ -32,14 +32,15 @@ if (typeof Handlebars !== 'undefined') {
   });
 
   //Usage: {{cfsFileUrl}} (with FS.File as current context)
-  Handlebars.registerHelper('cfsFileUrl', function(copyName) {
+  //deprecated
+  Handlebars.registerHelper('cfsFileUrl', function(options) {
     var self = this;
 
     if (!(self instanceof FS.File)) {
       throw new Error("cfsFileUrl helper must be used with a FS.File context");
     }
 
-    return self.url(copyName);
+    return self.url(options);
   });
 
   //Usage: {{cfsIsImage}} (with FS.File as current context)
