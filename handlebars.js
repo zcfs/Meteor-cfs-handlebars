@@ -25,27 +25,10 @@ if (typeof Handlebars !== 'undefined') {
     }
     
     var copy = (self.copies || {})[copyName] || {};
-    size = copy.size || 0;
+    size = copy.size || self.size || 0;
     hash = opts.hash || {};
     formatString = hash.formatString || '0.00 b';
     return numeral(size).format(formatString);
-  });
-
-  //Usage: {{cfsFileUrl}} (with FS.File as current context)
-  //deprecated
-  Handlebars.registerHelper('cfsFileUrl', function(options) {
-    var self = this;
-
-    if (!(self instanceof FS.File)) {
-      throw new Error("cfsFileUrl helper must be used with a FS.File context");
-    }
-
-    return self.url(options);
-  });
-
-  //Usage: {{cfsIsImage}} (with FS.File as current context)
-  Handlebars.registerHelper('cfsIsImage', function() {
-    return this.isImage();
   });
 
   //Usage: {{cfsIsUploading}} (with FS.File as current context or not for overall)
@@ -178,7 +161,7 @@ if (typeof Handlebars !== 'undefined') {
 
       // Kick off download of current copy, and when it's done, tell the browser
       // to save the file in the downloads folder.
-      fsFile.get(copyName);
+      fsFile.get({copyName: copyName});
 
       return false;
     }
@@ -187,7 +170,8 @@ if (typeof Handlebars !== 'undefined') {
   Template._cfsFileInput.events({
     'change .cfsFileInput': function(event, template) {
       var self = this;
-      var files = event.target.files, fsCollection = template.data.fsCollection;
+      var files = (event.originalEvent || event).target.files;
+      var fsCollection = template.data.fsCollection;
 
       if (!files)
         throw new Error("cfsFileInput Helper: no files");

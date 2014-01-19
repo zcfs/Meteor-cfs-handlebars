@@ -26,30 +26,35 @@ $ mrt add cfs-handlebars
 
 ## General FS.File Helpers
 
-### cfsFileUrl
+### url
 
 Returns the HTTP file URL for the current FS.File. Requires that the `useHTTP` option
-be set to `true` for the corresponding FS.Collection instance.
+be set to `true` for the corresponding FS.Collection instance. (It is by
+default.)
 
-Use with a `FS.File` as the current context.
+Use with an `FS.File` instance as the current context.
 
 Specify a `copy` attribute to get the URL for a specific copy. If you don't
 specify the copy name, the URL will be for the copy in the master store.
 
 ```
-{{cfsFileUrl}}
-{{cfsFileUrl copy="thumbnail"}}
+{{url}}
+{{url copy="thumbnail"}}
 ```
 
-### cfsIsImage
+### isImage
 
-Returns true if the current FS.File has a content type that begins with
-`image/`.
+Returns true if the specified copy of this file has an image
+content type. By default, checks the master copy. If the
+file object is unmounted or doesn't have that copy, checks
+the content type of the original file.
 
-Use with a `FS.File` as the current context.
+Use with an `FS.File` instance as the current context.
 
 ```
-{{#if cfsIsImage}}
+{{#if isImage}}
+{{/if}}
+{{#if isImage copy='thumbnail'}}
 {{/if}}
 ```
 
