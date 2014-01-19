@@ -222,6 +222,37 @@ if (typeof Handlebars !== 'undefined') {
       metadata: metadata
     }));
   });
+  
+  Template._cfsFileInputResume.events({
+    'change .cfsFileInput': function(event, template) {
+      var self = this;
+      var files = (event.originalEvent || event).target.files;
+      var fsFile = template.data.fsFile;
+
+      if (!files)
+        throw new Error("cfsFileInput Helper: no files");
+
+      if (!fsFile)
+        throw new Error("cfsFileInputResume Helper: no bound FS.File");
+      
+      fsFile.resume(files[0]);
+
+      event.target.parentElement.reset();
+    }
+  });
+
+  //Usage: {{cfsFileInputResume attribute=value}} (with FS.File as current context)
+  Handlebars.registerHelper('cfsFileInputResume', function(options) {
+    var hash = options.hash;
+
+    hash = hash || {};
+    hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
+
+    return new Handlebars.SafeString(Template._cfsFileInputResume({
+      fsFile: this,
+      attributes: objToAttributes(hash)
+    }));
+  });
 
 } else {
   throw new Error("add the handlebars package");

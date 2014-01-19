@@ -8,16 +8,24 @@
 
 <template name="_cfsUploadProgressBar">
   {{#with fsFile}}
+  {{#isolate}}
   <progress value="{{uploadProgress}}" max="100" {{{../attributes}}}>{{uploadProgress}}%</progress>
+  {{/isolate}}
   {{/with}}
 </template>
 
 <template name="_cfsDownloadProgressBar">
   {{#with fsFile}}
+  {{#isolate}}
   <progress value="{{cfsDownloadProgress copy=copyName}}" max="100" {{{../attributes}}}>{{cfsDownloadProgress copy=copyName}}%</progress>
+  {{/isolate}}
   {{/with}}
 </template>
 
 <template name="_cfsFileInput">
+  <form><input type="file" {{{attributes}}} /></form>
+</template>
+
+<template name="_cfsFileInputResume">
   <form><input type="file" {{{attributes}}} /></form>
 </template>
