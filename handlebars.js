@@ -23,7 +23,7 @@ if (typeof Handlebars !== 'undefined') {
     if (typeof copyName !== "string") {
       copyName = "_master";
     }
-    
+
     var copy = (self.copies || {})[copyName] || {};
     size = copy.size || self.size || 0;
     hash = opts.hash || {};
@@ -187,8 +187,9 @@ if (typeof Handlebars !== 'undefined') {
             fsFile.metadata[key] = value;
           });
         }
-        fsCollection.insert(fsFile, function (err) {
-          if (err) throw err;
+        fsCollection.insert(fsFile, function(err) {
+          if (err)
+            throw err;
         });
       });
 
@@ -200,7 +201,7 @@ if (typeof Handlebars !== 'undefined') {
   Handlebars.registerHelper('cfsFileInput', function(fsCollection, metadata, options) {
     var hash;
 
-    if(!fsCollection instanceof FS.Collection){
+    if (!fsCollection instanceof FS.Collection) {
       throw new Error("cfsFileInput helper requires an instance of FS.Collection as its first parameter");
     }
 
@@ -209,10 +210,14 @@ if (typeof Handlebars !== 'undefined') {
       metadata = {};
     }
 
-    hash = options.hash;
-
-    hash = hash || {};
+    hash = options.hash || {};
     hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
+
+    // Add "accept" attribute from collection filter
+    var filter = fsCollection.options.filter;
+    if (filter) {
+      hash.accept = filter.allow.contentTypes.join();
+    }
 
     metadata = _(metadata).isObject() ? metadata : {};
 
@@ -222,19 +227,15 @@ if (typeof Handlebars !== 'undefined') {
       metadata: metadata
     }));
   });
-  
+
   Template._cfsFileInputResume.events({
     'change .cfsFileInput': function(event, template) {
-      var self = this;
       var files = (event.originalEvent || event).target.files;
       var fsFile = template.data.fsFile;
 
       if (!files)
         throw new Error("cfsFileInput Helper: no files");
 
-      if (!fsFile)
-        throw new Error("cfsFileInputResume Helper: no bound FS.File");
-      
       fsFile.resume(files[0]);
 
       event.target.parentElement.reset();
@@ -243,13 +244,23 @@ if (typeof Handlebars !== 'undefined') {
 
   //Usage: {{cfsFileInputResume attribute=value}} (with FS.File as current context)
   Handlebars.registerHelper('cfsFileInputResume', function(options) {
-    var hash = options.hash;
+    var hash = options.hash || {}, fsFile = this;
 
-    hash = hash || {};
+    if (!fsFile)
+      throw new Error("cfsFileInputResume Helper: no bound FS.File");
+
     hash["class"] = hash["class"] ? hash["class"] + ' cfsFileInput' : 'cfsFileInput';
 
+    if (fsFile.isMounted()) {
+      // Add "accept" attribute from collection filter
+      var filter = fsFile.collection.options.filter;
+      if (filter) {
+        hash.accept = filter.allow.contentTypes.join();
+      }
+    }
+
     return new Handlebars.SafeString(Template._cfsFileInputResume({
-      fsFile: this,
+      fsFile: fsFile,
       attributes: objToAttributes(hash)
     }));
   });
@@ -266,7 +277,7 @@ var objToAttributes = function(obj) {
   var space = "";
   _.each(obj, function(value, key) {
     a += space + key + '="' + value + '"';
-    if(! space.length){
+    if (!space.length) {
       space = " ";
     }
   });
