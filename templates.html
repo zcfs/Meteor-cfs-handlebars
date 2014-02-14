@@ -17,7 +17,7 @@
 <template name="_cfsDownloadProgressBar">
   {{#with fsFile}}
   {{#isolate}}
-  <progress value="{{cfsDownloadProgress copy=copyName}}" max="100" {{{../attributes}}}>{{cfsDownloadProgress copy=copyName}}%</progress>
+  <progress value="{{cfsDownloadProgress store=storeName}}" max="100" {{{../attributes}}}>{{cfsDownloadProgress store=storeName}}%</progress>
   {{/isolate}}
   {{/with}}
 </template>
