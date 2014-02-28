@@ -21,15 +21,6 @@ if (typeof Handlebars !== 'undefined') {
     return numeral(size).format(formatString);
   });
 
-  //Usage: {{cfsIsUploading}} (with FS.File as current context or not for overall)
-  Handlebars.registerHelper('cfsIsUploading', function() {
-    if (this instanceof FS.File) {
-      return FS.uploadQueue.isUploadingFile(this);
-    } else {
-      return FS.uploadQueue.isRunning();
-    }
-  });
-
   //Usage: {{cfsIsDownloading}} (with FS.File as current context or not for overall)
   //Usage: {{cfsIsDownloading store="storeName"}}
   Handlebars.registerHelper('cfsIsDownloading', function(opts) {
@@ -39,11 +30,6 @@ if (typeof Handlebars !== 'undefined') {
     } else {
       return FS.downloadQueue.isRunning();
     }
-  });
-
-  //Usage: {{cfsUploadsArePaused}}
-  Handlebars.registerHelper('cfsUploadsArePaused', function() {
-    return FS.uploadQueue.isPaused();
   });
 
   //Usage: {{cfsDownloadsArePaused}}
@@ -80,9 +66,7 @@ if (typeof Handlebars !== 'undefined') {
   //Usage: {{cfsUploadProgress}} (with FS.File as current context or not for overall)
   Handlebars.registerHelper('cfsUploadProgress', function() {
     if (this instanceof FS.File) {
-      return FS.uploadQueue.progress(this);
-    } else {
-      return FS.uploadQueue.progress();
+      return this.uploadProgress();
     }
   });
 
