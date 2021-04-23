@@ -1,13 +1,13 @@
 {
 	"name": "cfs-handlebars",
 	"description": "Handlebars helpers for CollectionFS",
-	"homepage": "https://github.com/CollectionFS/Meteor-cfs-handlebars",
+	"homepage": "https://github.com/zcfs/Meteor-cfs-handlebars",
 	"author": "Eric Dobbertin (http://dairystatedesigns.com)",
 	"version": "0.0.3",
-	"git": "https://github.com/CollectionFS/Meteor-cfs-handlebars.git",
+	"git": "https://github.com/zcfs/Meteor-cfs-handlebars.git",
 	"packages": {
 		"cfs-base-package": {
-			"git": "https://github.com/CollectionFS/Meteor-cfs-base-package.git",
+			"git": "https://github.com/zcfs/Meteor-cfs-base-package.git",
 			"branch": "master"
 		}
 	}

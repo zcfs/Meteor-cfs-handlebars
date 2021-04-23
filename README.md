@@ -8,6 +8,6 @@ This package is to be archived due to inability to find contributors, thanks to 
 
 ---
 
-A Meteor package that adds handlebars helpers for [CollectionFS](https://github.com/CollectionFS/Meteor-CollectionFS).
+A Meteor package that adds handlebars helpers for [CollectionFS](https://github.com/zcfs/Meteor-CollectionFS).
 
 NOTE: This package is deprecated. You don't need it.
